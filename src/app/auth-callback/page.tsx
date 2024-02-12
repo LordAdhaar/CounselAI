@@ -8,8 +8,10 @@ export default function Page(){
     
     const origin = searchParams.get("origin");
 
-    const {data, isLoading} = trpc.authCallback.useQuery()
+    const {isSuccess, isLoading} = trpc.authCallback.useQuery()
     
-    
+    if (isSuccess){
+        router.push(origin ? `/${origin}` : "/dashboard")
+    }
 
 }
