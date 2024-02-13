@@ -10,6 +10,7 @@ export default function Page(){
     const searchParams = useSearchParams();
     
     const origin = searchParams.get("origin");
+    console.log(origin,111111)
 
     const {isSuccess, isError, error} = trpc.authCallback.useQuery(undefined,{
         retry: true,

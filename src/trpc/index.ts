@@ -19,7 +19,10 @@ export const appRouter = router({
       }
     })
 
+    console.log(dbUser, 9999)
+    
     if(!dbUser){
+
       await db.user.create({
         data: {
           id:user.id,
