@@ -20,8 +20,15 @@ export default async function DashboardPage(){
         console.log("dbUser: ",dbUser )
 
         if (dbUser===null) redirect("/auth-callback?origin=dashboard")   
-        
 
-        return <Dashboard/>
+        return (
+            <div>
+                <div>
+                    {user && user.email}
+                </div>
+                <Dashboard/>
+                
+            </div>
+        )
 
 }
