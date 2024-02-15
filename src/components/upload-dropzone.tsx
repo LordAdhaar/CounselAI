@@ -1,11 +1,43 @@
 import { Cloud, File } from "lucide-react"
+import { useState } from "react"
 import Dropzone from "react-dropzone"
+import { Progress } from "@/components/ui/progress"
+
 
 export default function UploadDropzone(){
+
+    const [isUploading, setIsUploading] = useState<boolean>(true)
+    const [uploadProgress, setUploadProgress] = useState<number>(0)
+
+    const startSimulatedProgress = () => {
+        setUploadProgress(0)
+
+        const interval = setInterval(()=>{
+            setUploadProgress((prevProgress) => {
+                if(prevProgress >= 95){
+                    clearInterval(interval)
+                    return prevProgress
+                }
+                return prevProgress + 5
+            })
+        }, 100)
+
+        return interval
+    }
+
     return (
-        <Dropzone multiple={false} onDrop={(acceptedFile) => {
-            console.log(acceptedFile)
-        }}>
+        <Dropzone multiple={false} onDrop={async (acceptedFile) => {
+            setIsUploading(true)
+            
+            const progressInterval = startSimulatedProgress()
+
+            // handle the file uploading
+
+
+            clearInterval(progressInterval)
+            setUploadProgress(100)
+
+            }}>
             {/* dialog box for uploading files */}
             {({getRootProps, getInputProps, acceptedFiles}) => (
                 <div {...getRootProps()} className="border h-64 m-4 border-dashed border-gray-300 rounded-lg ">
@@ -33,6 +65,12 @@ export default function UploadDropzone(){
                                     </div>
                                 </div>
                             ) : null}
+
+                            {isUploading ? (
+                                <div className="w-full mt-4 max-w-xs mx-auto">
+                                    <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200" />
+                                </div>
+                            ): null}
 
                         </label>
                     </div>
