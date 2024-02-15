@@ -2,12 +2,30 @@ import { Cloud, File } from "lucide-react"
 import { useState } from "react"
 import Dropzone from "react-dropzone"
 import { Progress } from "@/components/ui/progress"
+import { useUploadThing } from "@/lib/uploadthing"
+import { Toast } from "./ui/toast"
+import { useToast } from "./ui/use-toast"
+import { trpc } from "@/app/_trpc/client"
+import { useRouter } from "next/navigation"
 
 
 export default function UploadDropzone(){
 
+    const router = useRouter()
+
     const [isUploading, setIsUploading] = useState<boolean>(true)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
+
+    const { toast } = useToast()
+    const {startUpload} = useUploadThing("pdfUploader")
+
+    const {mutate: startPolling} = trpc.getFile.useMutation({
+        onSuccess: (file) => {
+            router.push(`/dashboard/${file.id}`)
+        },
+        retry: true,
+        retryDelay: 500
+    })
 
     const startSimulatedProgress = () => {
         setUploadProgress(0)
@@ -20,7 +38,7 @@ export default function UploadDropzone(){
                 }
                 return prevProgress + 5
             })
-        }, 100)
+        }, 500)
 
         return interval
     }
@@ -32,10 +50,34 @@ export default function UploadDropzone(){
             const progressInterval = startSimulatedProgress()
 
             // handle the file uploading
+            const res = await startUpload(acceptedFile)
 
+            if(!res){
+                return toast({
+                    title:"Something is wrong bish",
+                    description: "Please try again bish",
+                    variant:"destructive"
+                })
+            }
+
+            const [fileResponse] = res
+
+            const key = fileResponse?.key
+            
+            if(!key ){
+                return toast({
+                    title:"Something is wrong bish",
+                    description: "Please try again bish",
+                    variant:"destructive"
+                })
+            }
+
+            
 
             clearInterval(progressInterval)
             setUploadProgress(100)
+
+            startPolling({ key })
 
             }}>
             {/* dialog box for uploading files */}
