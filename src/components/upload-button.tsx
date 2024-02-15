@@ -10,6 +10,8 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { Button } from "./ui/button";
+import Dropzone from "react-dropzone";
+import UploadDropzone from "./upload-dropzone";
   
 
 export default function UploadButton(){
@@ -29,13 +31,7 @@ export default function UploadButton(){
                 <Button variant="default"> Upload PDF</Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
-                    </DialogDescription>
-                </DialogHeader>
+                <UploadDropzone />
             </DialogContent>
 
         </Dialog>
