@@ -53,9 +53,12 @@ export default function UploadDropzone(){
             const res = await startUpload(acceptedFile)
 
             if(!res){
+                
+                setIsUploading(false)
+
                 return toast({
-                    title:"Something is wrong bish",
-                    description: "Please try again bish",
+                    title:"Invalid file type",
+                    description: "Please upload a PDF",
                     variant:"destructive"
                 })
             }
@@ -67,7 +70,7 @@ export default function UploadDropzone(){
             if(!key ){
                 return toast({
                     title:"Something is wrong bish",
-                    description: "Please try again bish",
+                    description: "Please try again ",
                     variant:"destructive"
                 })
             }
@@ -99,12 +102,16 @@ export default function UploadDropzone(){
 
                             {acceptedFiles && acceptedFiles[0] ? (
                                 <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
-                                    <div className="px-3 py-2 h-full grid place-items-center">
+                                    
+                                    { isUploading ? (<div className="px-3 py-2 h-full grid place-items-center">
                                         <File className="h-4 w-4 text-blue-500" />
-                                    </div>
-                                    <div className="px-3 py-2 h-full text-sm truncate">
+                                    </div>) : null }
+                                    
+
+                                    { isUploading ? (<div className="px-3 py-2 h-full text-sm truncate">
                                         {acceptedFiles[0].name}
-                                    </div>
+                                    </div>) : null}
+                                    
                                 </div>
                             ) : null}
 
